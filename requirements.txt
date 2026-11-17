@@ -1,0 +1,14 @@
+# Dependências base (o Colab já traz numpy/pandas/matplotlib/opencv; o pip só completa).
+numpy
+pandas
+matplotlib
+pyyaml
+scipy
+scikit-image
+opencv-python-headless
+ultralytics      # YOLO + SAM/SAM2
+xarray
+netCDF4
+cdsapi           # download do ERA5
+tqdm
+# Real-ESRGAN é instalado só no notebook 07 (dependências próprias).

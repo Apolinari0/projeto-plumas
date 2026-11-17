@@ -1,0 +1,57 @@
+# Configuração única do projeto. Todos os notebooks leem este arquivo.
+# Ajuste aqui, não dentro dos notebooks, para manter os experimentos reprodutíveis.
+
+# Raiz dos DADOS no Google Drive (fora do Git). Pode ser sobrescrita pela
+# variável de ambiente PLUMAS_DRIVE_ROOT (útil para rodar localmente).
+drive_root: /content/drive/MyDrive/projeto_plumas
+
+seed: 42
+class_names: [pluma]
+
+video:
+  # Intervalo entre quadros extraídos (segundos). 0.5 = 2 quadros/s.
+  frame_step_s: 0.5
+
+split:
+  # Proporções por GRUPO (sequência/local/data), nunca por quadro.
+  ratios: {train: 0.7, val: 0.15, test: 0.15}
+  # Se houver uma única sequência: blocos contíguos com intervalo descartado
+  # entre eles (em quadros) para evitar quadros quase idênticos nos dois lados.
+  block_gap_frames: 10
+
+yolo:
+  model: yolo11n.pt        # ponto de partida (pesos pré-treinados COCO)
+  imgsz: 640               # se a pluma ocupar poucos pixels, testar 960/1280
+  epochs: 100
+  patience: 20
+  batch: 16
+  # Augmentations plausíveis: sem flip vertical, rotação mínima.
+  augment:
+    fliplr: 0.5
+    flipud: 0.0
+    degrees: 0.0
+    hsv_h: 0.015
+    hsv_s: 0.4
+    hsv_v: 0.4
+    scale: 0.3
+    mosaic: 1.0
+  conf: 0.25
+  iou: 0.5
+
+sam:
+  model: sam2.1_b.pt       # baixado automaticamente pelo ultralytics
+
+tracking:
+  iou_threshold: 0.2       # associação entre quadros consecutivos
+  max_gap_s: 5.0           # acima disso a trajetória é interrompida (não interpolar)
+
+era5:
+  dataset: reanalysis-era5-single-levels
+  variables: [10m_u_component_of_wind, 10m_v_component_of_wind, 2m_temperature]
+  # Caixa [Norte, Oeste, Sul, Leste] em graus. Use ~0.5° ao redor da câmera.
+  area: null
+  # "nearest" (célula/hora mais próxima) ou "interp" (interpolação espaço-tempo)
+  method: nearest
+
+super_resolution:
+  scale: 4
